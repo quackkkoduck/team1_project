@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -59,43 +60,57 @@ public class UserController {
 		session.invalidate();
 		return "redirect:/";
 	}
-	@GetMapping("/myPage")
-public String myPage(Model model) {
-    User user = userRepository.findById((Long) session.getAttribute("user_id")).orElse(null);
-    if (user == null) {
-        // 사용자 정보를 찾을 수 없음
-        return "redirect:/signin";
-    }
-    model.addAttribute("user", user);
-    return "myPage";
-}
-@PostMapping("/myPage")
-public String myPageUpdate(@ModelAttribute User user, BindingResult bindingResult) {
-    // 현재 로그인한 사용자의 아이디를 가져옴
-    Long userId = (Long) session.getAttribute("user_id");
+	// @GetMapping("/myPage")
+    // public String myPage(Model model) {
+    //     Long userId = (Long) session.getAttribute("user_id");
+    //     if (userId == null) {
+    //         // User is not logged in, redirect to signin
+    //         return "redirect:/signin";
+    //     }
 
-    // 사용자 ID로 기존 사용자 정보를 찾음
-    User existingUser = userRepository.findById(userId).orElse(null);
+    //     User user = userRepository.findById(userId).orElse(null);
+    //     if (user == null) {
+    //         // User not found, handle as needed (e.g., show an error page)
+    //         return "error-page";
+    //     }
 
-    if (existingUser == null) {
-        // 사용자 정보를 찾을 수 없음
-        return "redirect:/signin";
-    }
+    //     model.addAttribute("user", user);
+    //     return "myPage";
+    // }
 
-    // 사용자 정보 업데이트
-    existingUser.setEmail(user.getEmail());
-    existingUser.setName(user.getName());
+    // @PostMapping("/myPage")
+    // public String myPageUpdate(@ModelAttribute User user, BindingResult bindingResult) {
+    //     // Get the current user's ID from the session
+    //     Long userId = (Long) session.getAttribute("user_id");
+        
+    //     if (userId == null) {
+    //         // User is not logged in, redirect to signin
+    //         return "redirect:/signin";
+    //     }
 
-    // 비밀번호가 변경되었을 경우에만 업데이트
-    if (user.getPwd() != null && !user.getPwd().isEmpty()) {
-        String encodedPwd = passwordEncoder.encode(user.getPwd());
-        existingUser.setPwd(encodedPwd);
-    }
+    //     // Retrieve the existing user's information
+    //     User existingUser = userRepository.findById(userId).orElse(null);
+    //     if (existingUser == null) {
+    //         // User not found, handle as needed (e.g., show an error page)
+    //         return "error-page";
+    //     }
 
-    userRepository.save(existingUser);
+    //     // Update the user's information
+    //     existingUser.setEmail(user.getEmail());
+    //     existingUser.setName(user.getName());
 
-    return "redirect:/myPage";
-}
+    //     // Check if the password has been provided and is not empty
+    //     if (user.getPwd() != null && !user.getPwd().isEmpty()) {
+    //         // Encrypt and set the new password
+    //         String encodedPwd = passwordEncoder.encode(user.getPwd());
+    //         existingUser.setPwd(encodedPwd);
+    //     }
+
+    //     // Save the updated user information
+    //     userRepository.save(existingUser);
+
+    //     return "redirect:/myPage";
+    // }
 
 	
 	@GetMapping("/signup") 
@@ -108,7 +123,7 @@ public String myPageUpdate(@ModelAttribute User user, BindingResult bindingResul
 	public String signupPost(@ModelAttribute User user, BindingResult bindingResult) {
 		// 이메일 정규식 패턴
 		String emailPattern = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$";
-		String pwdPattern = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$";
+		
 	
 		// 이메일 검사
 		if (!user.getEmail().matches(emailPattern)) {
@@ -117,6 +132,7 @@ public String myPageUpdate(@ModelAttribute User user, BindingResult bindingResul
 			return "signup";
 		}
 		// 비번 검사
+		String pwdPattern = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$";
 		if (!user.getPwd().matches(pwdPattern)) {
 			bindingResult.rejectValue("pwd", "error.user", "Invalid pwd");
 			return "signup";
@@ -128,4 +144,58 @@ public String myPageUpdate(@ModelAttribute User user, BindingResult bindingResul
 		System.out.println(user); // 이메일 유효성 검사 실패 시 다시 회원가입 페이지로 이동
 		return "redirect:/";
 	}
+	@GetMapping("/myPage") 
+	public String myPage() {
+		return "myPage";
+	}
+
+	@PostMapping("/myPage")
+	@Transactional
+	public String myPagePost(@ModelAttribute User user, BindingResult bindingResult) {
+		// 이메일 정규식 패턴
+		String emailPattern = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$";
+		
+	
+		// 이메일 검사
+		if (!user.getEmail().matches(emailPattern)) {
+			bindingResult.rejectValue("email", "error.user", "Invalid email");
+			System.out.println(5252);
+			return "myPage";
+		}
+		// 비번 검사
+		String pwdPattern = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$";
+		if (!user.getPwd().matches(pwdPattern)) {
+			bindingResult.rejectValue("pwd", "error.user", "Invalid pwd");
+			return "myPage";
+		}
+		String userPwd = user.getPwd();
+		String encodedPwd=passwordEncoder.encode(userPwd);//비번 암호화해서 
+		user.setPwd(encodedPwd); //다시 Pwd에 넣어준다
+		userRepository.save(user);
+		System.out.println(user); // 이메일 유효성 검사 실패 시 다시 회원가입 페이지로 이동
+		return "redirect:/";
+	}
+	// @GetMapping("/myPage")
+    // public String mypage(Model model,@RequestParam String email){
+    //     User opt = userRepository.findByEmail(email);
+    //     model.addAttribute("user", opt);
+    //     return "myPage";
+    // }
+    // @PostMapping("/myPage")
+    // public String updatePost(@ModelAttribute User user){
+    //     User sessionUser = (User) session.getAttribute("user_info");
+        
+    //     long id = sessionUser.getId();
+    //     User dbUser = userRepository.findById(id);
+
+    //     String userPwd = user.getPwd();
+    //     String dbPwd = dbUser.getPwd();
+    //     String encodedPwd = passwordEncoder.encode(userPwd);
+    //     if(userPwd.equals(dbPwd)) {
+    //         encodedPwd = userPwd;
+    //     }
+    //     user.setPwd(encodedPwd);
+    //     userRepository.save(user);
+    //     return "/signin";
+    // }
 }

@@ -22,7 +22,7 @@
           <td th:text="${board.content}"></td>
           <td th:text="${board.user.name}"></td>
           <td>
-            <a th:href="@{'/board/update/' + ${board.id}}">Edit</a>
+            <a th:unless="${session.user_id == null}" th:href="@{'/board/update/' + ${board.id}}" style="color: rgba(195, 5, 5, 0.915);">Edit</a>
           </td>
           
         </tr>

@@ -18,12 +18,9 @@ public class myPage {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
-	private String title;
-	private String content;
-	// private String userId;
-	// @OneToMany(mappedBy = "board")
-    // List<Comment> Comments =
-    //  new ArrayList<>();
+	private String email;
+	private String pwd;
+	private String name;
      @ManyToOne
 	 User user;
 

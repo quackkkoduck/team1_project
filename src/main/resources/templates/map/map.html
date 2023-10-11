@@ -62,7 +62,7 @@
         // 마커에 마우스 오버 이벤트 핸들러를 추가합니다.
         kakao.maps.event.addListener(marker, 'mouseover', function () {
           const infowindow = new kakao.maps.InfoWindow({
-            content: result.data[i].address, // 주소 정보를 보여주거나 원하는 정보로 변경하세요
+            content: result.data[i].address,강남역 // 주소 정보를 보여주거나 원하는 정보로 변경하세요
           });
           infowindow.open(map, marker);
         });
