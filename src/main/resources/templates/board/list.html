@@ -1,46 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head th:replace="common/head">
   <style>
-html{height: 100%;}
-body{height: 100%;}
+    html {
+      height: 200%;
+    }
+
+    body {
+      position: relative;
+      padding-bottom: 200%;
+      height: 100%;
+    }
+
+    .footer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: #333;
+      /* 원하는 배경색으로 변경하세요 */
+      color: #fff;
+      /* 텍스트 색상을 원하는 색상으로 변경하세요 */
+      padding-bottom: 10px;
+      text-align: center;
+    }
+
+    .table-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      /* padding-left: 30%; */
+      padding-right: 0;
+    }
+    .row {
+    --bs-gutter-x: -10.5rem;
+    }
   </style>
 </head>
-<body style="height: 100%;position: relative;">
-<div th:replace="common/header">
-</div>
-<nav th:replace="common/nav">
-</nav>
-<div class="container mt-5">
-  <div class="row">
-    <table class="table table-hover">
-      <thead>
-        <tr>
-          <th>번호</th><th>제목</th><th>내용</th><th>작성자</th><th>수정</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr th:each="board : ${list}" th:attr="id=${board.id}">
-          <td th:text="${board.id}"></td>
-          <td th:text="${board.title}"></td>
-          <td th:text="${board.content}"></td>
-          <td th:text="${board.user.name}"></td>
-          <td>
-            <a th:unless="${session.user_id == null}" th:href="@{'/board/update/' + ${board.id}}" style="color: rgba(195, 5, 5, 0.915);">Edit</a>
-          </td>
-          
-        </tr>
-      </tbody>
-    </table>
-    <button type="button" class="btn btn-primary btn-block" id="write-btn">글쓰기</button>
+
+<body style="padding-bottom:100; height: 100%; position: relative; padding-left: calc(var(--bs-gutter-x) * 5);">
+
+  <div th:replace="common/header">
   </div>
-</div>
-<script>
-  document.querySelector('#write-btn').addEventListener('click', () => {
-    location = '/board/write';
-  });
-</script>
-<div th:replace="common/footer">
-</div>
+  <nav th:replace="common/nav">
+  </nav>
+  <div class="container mt-5">
+    <div class="row">
+      <div class="table-container  m-auto" style="max-width: 80%;max-height: max-content ;display: block;margin-left: auto;margin-right: auto;">
+        <table class="table table-hover"
+          style="background-size: contain;border-style: solid;content-visibility: visible; box-sizing:content-box; width: 80%;position: relative;background-color:rgb(243, 252, 252);">
+          <thead>
+            <tr>
+              <th>번호</th>
+              <th>제목</th>
+              <th>내용</th>
+              <th>작성자</th>
+              <th>내용보기</th>
+            </tr>
+          </thead>
+          
+          <tbody>
+            <tr th:each="board : ${list}" th:attr="id=${board.id}">
+              <td th:text="${board.id}"></td>
+              <td th:text="${board.title}"></td>
+              <td th:text="${board.content}"></td>
+              <td th:text="${board.user.name}"></td>
+              <td>
+                <a th:unless="${session.user_id == null}" th:href="@{'/board/update/' + ${board.id}}"
+                  style="color: rgba(195, 5, 5, 0.915);">상세내용 보기</a>
+              </td>
+            </tr>
+          </tbody>
+          <div>
+            <div style="margin-right: 20%;">
+              <button type="button" class="btn btn-primary btn-block bg-success" id="write-btn" style="width: 300;right: 80px;float:right;">글쓰기</button>
+            </div>
+          </div>
+        </table>
+      </div>
+    </div>
+    <br><br><br><br><br><br><br><br><br><br><br><br><br>
+  </div>
+
+  <script>
+    document.querySelector('#write-btn').addEventListener('click', () => {
+      location = '/board/write';
+    });
+  </script>
+  <!-- <div th:replace="common/footer">
+</div> -->
+  <div class="footer">
+    <div th:replace="common/footer"></div>
+  </div>
 </body>
+
 </html>

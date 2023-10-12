@@ -159,36 +159,44 @@ public class UserController {
 
 	
 	@GetMapping("/signup") 
-	public String signup() {
-		return "signup";
-	}
+public String signup(Model model) {
+    model.addAttribute("user", new User()); // User 객체를 모델에 추가
+    return "signup";
+}
 
-	@PostMapping("/signup")
-	@Transactional
-	public String signupPost(@ModelAttribute User user, BindingResult bindingResult) {
-		// 이메일 정규식 패턴
-		String emailPattern = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$";
-		String pwdPattern = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$";
-		
-	
-		// 이메일 검사
-		if (!user.getEmail().matches(emailPattern)) {
-			bindingResult.rejectValue("email", "error.user", "Invalid email");
-			System.out.println(5252);
-			return "signup";
-		}
-		// 비번 검사
-		if (!user.getPwd().matches(pwdPattern)) {
-			bindingResult.rejectValue("pwd", "error.user", "Invalid pwd");
-			return "signup";
-		}
-		String userPwd = user.getPwd();
-		String encodedPwd=passwordEncoder.encode(userPwd);//비번 암호화해서 
-		user.setPwd(encodedPwd); //다시 Pwd에 넣어준다
-		userRepository.save(user);
-		System.out.println(user); // 이메일 유효성 검사 실패 시 다시 회원가입 페이지로 이동
-		return "redirect:/";
-	}
+@PostMapping("/signup")
+@Transactional
+public String signupPost(@ModelAttribute User user, BindingResult bindingResult) {
+    // 이메일 중복 검사
+    List<User> existingUsers = userRepository.findByEmail(user.getEmail());
+    if (!existingUsers.isEmpty()) {
+        bindingResult.rejectValue("email", "error.user", "이미 가입된 이메일입니다");
+        return "signup";
+    }
+
+    // 이메일 검사
+    String emailPattern = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$";
+    if (!user.getEmail().matches(emailPattern)) {
+        bindingResult.rejectValue("email", "error.user", "Invalid email");
+        return "signup";
+    }
+
+    // 비밀번호 검사
+    String pwdPattern = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$";
+    if (!user.getPwd().matches(pwdPattern)) {
+        bindingResult.rejectValue("pwd", "error.user", "영문 숫자 특수기호 조합 8자리 이상 입력해 주세요");
+        return "signup";
+    }
+
+    // 비밀번호 암호화
+    String userPwd = user.getPwd();
+    String encodedPwd = passwordEncoder.encode(userPwd); // 비밀번호 암호화
+    user.setPwd(encodedPwd); // 암호화된 비밀번호를 설정
+
+    userRepository.save(user);
+
+    return "redirect:/";
+}
 	@GetMapping("/myPage")
 public String myPage(Model model) {
     Long userId = (Long) session.getAttribute("user_id");

@@ -53,10 +53,17 @@ public String boardUpdate(
     Optional<Board> data = boardRepository.findById(id);
     if (data.isPresent()) {
         Board originalBoard = data.get();
-        originalBoard.setTitle(updatedBoard.getTitle());
-        originalBoard.setContent(updatedBoard.getContent());
-        boardRepository.save(originalBoard);
-        return "redirect:/board/list";
+		
+		String userEmail = (String) session.getAttribute("user_email");
+        if (userEmail != null && userEmail.equals(originalBoard.getUser().getEmail())) {
+            originalBoard.setTitle(updatedBoard.getTitle());
+            originalBoard.setContent(updatedBoard.getContent());
+            boardRepository.save(originalBoard);
+            return "redirect:/board/list";
+        } else {
+            // 이메일이 일치하지 않을 때 처리 (예를 들어, 에러 페이지 표시)
+            return "error-page"; // 또는 다른 적절한 처리
+        }
     } else {
         return "error-page"; // Handle the case where the board with the specified ID was not found
     }
@@ -89,10 +96,10 @@ public String boardUpdate(
 	public String boardWrite() {
 		return "board/write";
 	}
-	@GetMapping("/myPage/write")
-	public String myPageWrite() {
-		return "myPage/write";
-	}
+	// @GetMapping("/myPage/write")
+	// public String myPageWrite() {
+	// 	return "myPage/write";
+	// }
 	
 	@PostMapping("/board/write")
 	
@@ -116,30 +123,29 @@ public String boardUpdate(
 		return 
 				"redirect:/board/list";
 				
-
 	}
-	@PostMapping("/myPage/write")
+	// @PostMapping("/myPage/write")
 	
-	public String myPageWrite(@ModelAttribute Board board) {
+	// public String myPageWrite(@ModelAttribute Board board) {
 		 
-		long userId = (long)session.getAttribute("user_id");
-		// System.out.println(session.getAttribute("user_id"));
-		// 		System.out.println(session.getAttribute("user_id"));
+	// 	long userId = (long)session.getAttribute("user_id");
+	// 	// System.out.println(session.getAttribute("user_id"));
+	// 	// 		System.out.println(session.getAttribute("user_id"));
 
-		String userEmail = (String)session.getAttribute("user_email");
-		// 		System.out.println(userEmail);
+	// 	String userEmail = (String)session.getAttribute("user_email");
+	// 	// 		System.out.println(userEmail);
 
-		System.out.println(userId);
-		User user= new User();
-		user.setId(userId);
-		board.setUser(user);
-		boardRepository.save(board);
-		if(userEmail==null  ){
-            return "redirect:/signin";
-        }
-		return 
-				"redirect:/myPage/write";
+	// 	System.out.println(userId);
+	// 	User user= new User();
+	// 	user.setId(userId);
+	// 	board.setUser(user);
+	// 	boardRepository.save(board);
+	// 	if(userEmail==null  ){
+    //         return "redirect:/signin";
+    //     }
+	// 	return 
+	// 			"redirect:/myPage/write";
 				
 
-	}
+	// }
 }
