@@ -63,7 +63,7 @@
           </thead>
           
           <tbody>
-            <tr th:each="board : ${list}" th:attr="id=${board.id}">
+            <tr th:each="board : ${list}" th:attr="id=${board.id}" th:unless="${session.user_id == null}" th:href="@{'/board/update/' + ${board.id}}">
               <td th:text="${board.id}"></td>
               <td th:text="${board.title}"></td>
               <td th:text="${board.content}"></td>
@@ -72,6 +72,9 @@
                 <a th:unless="${session.user_id == null}" th:href="@{'/board/update/' + ${board.id}}"
                   style="color: rgba(195, 5, 5, 0.915);">상세내용 보기</a>
               </td>
+            </tr>
+            <tr th:if="${session.user_id == null}">
+              <td colspan="5">로그인 후 이용해 주세요</td>
             </tr>
           </tbody>
           <div>
@@ -82,8 +85,8 @@
         </table>
       </div>
     </div>
-    <br><br><br><br><br><br><br><br><br><br><br><br><br>
   </div>
+    <br><br><br><br><br><br><br><br><br><br><br><br><br>
 
   <script>
     document.querySelector('#write-btn').addEventListener('click', () => {

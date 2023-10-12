@@ -7,7 +7,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.example.board.interceptor.SignInCheckInterceptor;
 
-// @Configuration
+@Configuration
 public class InterceptorConfig implements WebMvcConfigurer {
     @Autowired
     private SignInCheckInterceptor signInCheckInterceptor;
@@ -17,7 +17,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
         registry
                 .addInterceptor(signInCheckInterceptor)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/signin", "/signup", "/myPage");
+                .excludePathPatterns("/signin", "/signup", "/myPage"); // /myPage를 인터셉트하지 않도록 설정
 
         WebMvcConfigurer.super.addInterceptors(registry);
     }
