@@ -27,7 +27,7 @@
       <h1 th:unless="${session.user_id == null}">
         <a th:href="@{/signout}" class="link-white">
           [[ '로그아웃.' ]] &nbsp;&nbsp;&nbsp;
-          <a th:href="@{/myPage}" class="link-white">
+          <a th:href="@{/usercheck}" class="link-white">
             [[ ${session.user_email} + '님 반갑습니다.' ]]
           </a>
         </a>

@@ -20,13 +20,19 @@ public class User {
 	private String pwd;
 	private String name;
 
-	@OneToMany(mappedBy = "user")
-    private List<Board> boards;
-	public List<Board> getBoards() {
-        return boards;
-    }
-	public void setBoards(List<Board> boards) {
-        this.boards = boards;
+	// @OneToMany(mappedBy = "user")
+    // private List<Board> boards;
+	// public List<Board> getBoards() {
+    //     return boards;
+    // }
+	// public void setBoards(List<Board> boards) {
+    //     this.boards = boards;
+    // }
+	public User orElse(Object object) {
+		return null;
+	}
+    public boolean isPresent() {
+        return false;
     }
 	// private String userId;
 	// public User orElse(Object object) {

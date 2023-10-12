@@ -21,7 +21,7 @@ public class myPage {
 	private String email;
 	private String pwd;
 	private String name;
-     @ManyToOne
-	 User user;
+    //  @ManyToOne
+	//  User user;
 
 }

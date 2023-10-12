@@ -25,13 +25,14 @@
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
   <script>
+    
     const container = document.getElementById('map');
     const options = {
-      center: new kakao.maps.LatLng(37.4980239, 127.027572), // 강남역
+      center: new kakao.maps.LatLng(35.1585 , 126.7955), // 광주인력개발원
       level: 4
     };
     const map = new kakao.maps.Map(container, options);
-    const markerPosition = new kakao.maps.LatLng(37.4980239, 127.027572);
+    const markerPosition = new kakao.maps.LatLng(35.1585 , 126.7955);
     const marker = new kakao.maps.Marker({
       position: markerPosition
     });
