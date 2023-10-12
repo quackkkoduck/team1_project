@@ -62,10 +62,10 @@ public String boardUpdate(
             return "redirect:/board/list";
         } else {
             // 이메일이 일치하지 않을 때 처리 (예를 들어, 에러 페이지 표시)
-            return "error-page"; // 또는 다른 적절한 처리
+            return "redirect:/board/update/{id}"; // 또는 다른 적절한 처리
         }
     } else {
-        return "error-page"; // Handle the case where the board with the specified ID was not found
+        return "redirect:/board/update/{id}"; // Handle the case where the board with the specified ID was not found
     }
 }
 
