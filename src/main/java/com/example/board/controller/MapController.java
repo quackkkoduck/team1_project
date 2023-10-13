@@ -4,7 +4,9 @@ import com.example.board.model.Point;
 import com.example.board.repository.PointRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -19,6 +21,14 @@ public class MapController {
     public String map() {
         return "map/map";
     }
+	@RequestMapping("/map")
+public String yourPage(Model model) {
+    // 데이터를 가져와서 모델에 추가
+    model.addAttribute("latitude", 37.4980239);
+    model.addAttribute("longitude", 127.027572);
+    
+    return "/map"; // Thymeleaf 템플릿 이름
+}
 
     private double distance(double lat1, double lon1, double lat2, double lon2) {
         double theta = lon1 - lon2;

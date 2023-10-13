@@ -18,6 +18,10 @@
   <div class="container mt-5">
     <div class="row">
       <div id="map" style="width:500px; height:400px; margin:0 auto;"></div>
+      <div>
+        <input type="text" id="location" placeholder="장소 검색">
+        <button onclick="searchLocation()">검색</button>
+      </div>
     </div>
   </div>
   <script src="http://dapi.kakao.com/v2/maps/sdk.js?appkey=da146a2a6ff6a54903c1d2a7caecd1c7"></script>
@@ -25,13 +29,22 @@
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
   <script>
+     const latitude = /*[[${latitude}]]*/ 35.1601271;
+    const longitude = /*[[${longitude}]]*/ 126.8086201;
+    function initMap() {
+      map = new kakao.maps.Map(container, options);
+      marker = new kakao.maps.Marker({
+        map: map,
+        position: options.center,
+      });
+    }
     const container = document.getElementById('map');
     const options = {
-      center: new kakao.maps.LatLng(35.1585, 126.7955), // 광주인력개발원
+      center: new kakao.maps.LatLng(latitude, longitude), // 광주인력개발원
       level: 4
     };
     const map = new kakao.maps.Map(container, options);
-    const markerPosition = new kakao.maps.LatLng(35.1585, 126.7955);
+    const markerPosition = new kakao.maps.LatLng(35.1601271, 126.8086201);
     const marker = new kakao.maps.Marker({
       position: markerPosition
     });
@@ -51,7 +64,21 @@
 
       // 마커를 저장할 배열 생성
       const markers = [];
+      function searchLocation() {
+      const location = document.getElementById('location').value;
 
+      // Kakao 지도 API의 장소 검색 서비스를 사용하여 검색
+      const geocoder = new kakao.maps.services.Geocoder();
+      geocoder.addressSearch(location, function (result, status) {
+        if (status === kakao.maps.services.Status.OK) {
+          const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+
+          // 검색 결과 위치로 지도 이동 및 마커 표시
+          map.setCenter(coords);
+          marker.setPosition(coords);
+        }
+      });
+    }
       for (let i = 0; i < result.data.length; i++) {
         const marker = new kakao.maps.Marker({
           map: map,
@@ -71,6 +98,8 @@
 
         markers.push(marker);
       }
+      // 페이지 로드 시 지도 초기화 함수 호출
+    initMap();
     });
   </script>
 

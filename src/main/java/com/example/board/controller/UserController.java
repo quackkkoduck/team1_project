@@ -126,7 +126,7 @@ public String signupPost(@ModelAttribute User user, BindingResult bindingResult)
     // 이메일 검사
     String emailPattern = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$";
     if (!user.getEmail().matches(emailPattern)) {
-        bindingResult.rejectValue("email", "error.user", "Invalid email");
+        bindingResult.rejectValue("email", "error.user", "유효하지 않은 이메일 형식입니다.");
         return "signup";
     }
 
