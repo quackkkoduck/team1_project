@@ -25,14 +25,13 @@
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
   <script>
-    
     const container = document.getElementById('map');
     const options = {
-      center: new kakao.maps.LatLng(35.1585 , 126.7955), // 광주인력개발원
+      center: new kakao.maps.LatLng(35.1585, 126.7955), // 광주인력개발원
       level: 4
     };
     const map = new kakao.maps.Map(container, options);
-    const markerPosition = new kakao.maps.LatLng(35.1585 , 126.7955);
+    const markerPosition = new kakao.maps.LatLng(35.1585, 126.7955);
     const marker = new kakao.maps.Marker({
       position: markerPosition
     });
@@ -42,7 +41,7 @@
       url: '/map/getPoint',
       method: 'get',
       params: {
-        lat: 37.4980239, 
+        lat: 37.4980239,
         lng: 127.027572,
         km: 10
       }
@@ -50,7 +49,7 @@
     data.then(function (result) {
       console.log(result.data);
 
-      // 마커를 저장할 배열을 생성합니다.
+      // 마커를 저장할 배열 생성
       const markers = [];
 
       for (let i = 0; i < result.data.length; i++) {
@@ -60,22 +59,18 @@
             result.data[i].latitude, result.data[i].longitude),
           title: result.data[i].title,
         });
-        // 마커에 마우스 오버 이벤트 핸들러를 추가합니다.
-        kakao.maps.event.addListener(marker, 'mouseover', function () {
-          const infowindow = new kakao.maps.InfoWindow({
-            content: result.data[i].address,강남역 // 주소 정보를 보여주거나 원하는 정보로 변경하세요
-          });
-          infowindow.open(map, marker);
-        });
 
-        // 마커에 마우스 아웃 이벤트 핸들러를 추가합니다.
-        kakao.maps.event.addListener(marker, 'mouseout', function () {
-          infowindow.close();
+        // 마커에 클릭 이벤트 핸들러 추가
+        kakao.maps.event.addListener(marker, 'click', function () {
+          const infowindow = new kakao.maps.InfoWindow({
+            content: '인력개발원', // 원하는 내용
+            position: marker.getPosition(), // 마커 위치에 띄우도록 설정
+          });
+          infowindow.open(map);
         });
 
         markers.push(marker);
       }
-      
     });
   </script>
 

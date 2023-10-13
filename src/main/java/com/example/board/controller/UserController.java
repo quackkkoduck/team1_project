@@ -105,57 +105,6 @@ public class UserController {
 		session.invalidate();
 		return "redirect:/";
 	}
-	// @GetMapping("/myPage")
-    // public String myPage(Model model) {
-    //     Long userId = (Long) session.getAttribute("user_id");
-    //     if (userId == null) {
-    //         // User is not logged in, redirect to signin
-    //         return "redirect:/signin";
-    //     }
-
-    //     User user = userRepository.findById(userId).orElse(null);
-    //     if (user == null) {
-    //         // User not found, handle as needed (e.g., show an error page)
-    //         return "error-page";
-    //     }
-
-    //     model.addAttribute("user", user);
-    //     return "myPage";
-    // }
-
-    // @PostMapping("/myPage")
-    // public String myPageUpdate(@ModelAttribute User user, BindingResult bindingResult) {
-    //     // Get the current user's ID from the session
-    //     Long userId = (Long) session.getAttribute("user_id");
-        
-    //     if (userId == null) {
-    //         // User is not logged in, redirect to signin
-    //         return "redirect:/signin";
-    //     }
-
-    //     // Retrieve the existing user's information
-    //     User existingUser = userRepository.findById(userId).orElse(null);
-    //     if (existingUser == null) {
-    //         // User not found, handle as needed (e.g., show an error page)
-    //         return "error-page";
-    //     }
-
-    //     // Update the user's information
-    //     existingUser.setEmail(user.getEmail());
-    //     existingUser.setName(user.getName());
-
-    //     // Check if the password has been provided and is not empty
-    //     if (user.getPwd() != null && !user.getPwd().isEmpty()) {
-    //         // Encrypt and set the new password
-    //         String encodedPwd = passwordEncoder.encode(user.getPwd());
-    //         existingUser.setPwd(encodedPwd);
-    //     }
-
-    //     // Save the updated user information
-    //     userRepository.save(existingUser);
-
-    //     return "redirect:/myPage";
-    // }
 
 	
 	@GetMapping("/signup") 
@@ -241,27 +190,4 @@ public String myPagePost(@ModelAttribute User user, BindingResult bindingResult)
 
     return "redirect:/myPage";
 }
-	// @GetMapping("/myPage")
-    // public String mypage(Model model,@RequestParam String email){
-    //     User opt = userRepository.findByEmail(email);
-    //     model.addAttribute("user", opt);
-    //     return "myPage";
-    // }
-    // @PostMapping("/myPage")
-    // public String updatePost(@ModelAttribute User user){
-    //     User sessionUser = (User) session.getAttribute("user_info");
-        
-    //     long id = sessionUser.getId();
-    //     User dbUser = userRepository.findById(id);
-
-    //     String userPwd = user.getPwd();
-    //     String dbPwd = dbUser.getPwd();
-    //     String encodedPwd = passwordEncoder.encode(userPwd);
-    //     if(userPwd.equals(dbPwd)) {
-    //         encodedPwd = userPwd;
-    //     }
-    //     user.setPwd(encodedPwd);
-    //     userRepository.save(user);
-    //     return "/signin";
-    // }
 }
