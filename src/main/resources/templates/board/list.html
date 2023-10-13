@@ -19,9 +19,7 @@
       left: 0;
       right: 0;
       background-color: #333;
-      /* 원하는 배경색으로 변경하세요 */
       color: #fff;
-      /* 텍스트 색상을 원하는 색상으로 변경하세요 */
       padding-bottom: 10px;
       text-align: center;
     }
@@ -32,11 +30,10 @@
       justify-content: center;
       align-items: center;
       height: 100%;
-      /* padding-left: 30%; */
-      padding-right: 0;
     }
+
     .row {
-    --bs-gutter-x: -10.5rem;
+      --bs-gutter-x: -10.5rem;
     }
   </style>
 </head>
@@ -49,7 +46,8 @@
   </nav>
   <div class="container mt-5">
     <div class="row">
-      <div class="table-container  m-auto" style="max-width: 80%;max-height: max-content ;display: block;margin-left: auto;margin-right: auto;">
+      <div class="table-container  m-auto"
+        style="max-width: 80%;max-height: max-content;display: block;margin-left: auto;margin-right: auto;">
         <table class="table table-hover"
           style="background-size: contain;border-style: solid;content-visibility: visible; box-sizing:content-box; width: 80%;position: relative;background-color:rgb(243, 252, 252);">
           <thead>
@@ -59,18 +57,25 @@
               <th>내용</th>
               <th>작성자</th>
               <th>내용보기</th>
+              <th></th>
             </tr>
           </thead>
-          
+
           <tbody>
-            <tr th:each="board : ${list}" th:attr="id=${board.id}" th:unless="${session.user_id == null}" th:href="@{'/board/update/' + ${board.id}}">
+            <tr th:each="board : ${list}" th:attr="id=${board.id}" th:unless="${session.user_id == null}"
+              th:href="@{'/board/update/' + ${board.id}}">
               <td th:text="${board.id}"></td>
               <td th:text="${board.title}"></td>
               <td th:text="${board.content}"></td>
               <td th:text="${board.user.name}"></td>
               <td>
                 <a th:unless="${session.user_id == null}" th:href="@{'/board/update/' + ${board.id}}"
-                  style="color: rgba(195, 5, 5, 0.915);">상세내용 보기</a>
+                  style="color: rgba(65, 36, 171, 0.915);">상세내용 보기</a>
+              </td>
+              <td>
+                <a th:unless="${session.user_id == null}" th:href="@{'/board/delete/' + ${board.id}}"
+                  style="color: rgba(195, 5, 5, 0.915);"
+                  onclick="return confirm('정말로 삭제하시겠습니까?');">❌</a>
               </td>
             </tr>
             <tr th:if="${session.user_id == null}">
@@ -79,14 +84,15 @@
           </tbody>
           <div>
             <div style="margin-right: 20%;">
-              <button type="button" class="btn btn-primary btn-block bg-success" id="write-btn" style="width: 300;right: 80px;float:right;">글쓰기</button>
+              <button type="button" class="btn btn-primary btn-block bg-success" id="write-btn"
+                style="width: 300;right: 80px;float:right;">글쓰기</button>
             </div>
           </div>
         </table>
       </div>
     </div>
   </div>
-    <br><br><br><br><br><br><br><br><br><br><br><br><br>
+  <br><br><br><br><br><br><br><br><br><br><br><br><br>
 
   <script>
     document.querySelector('#write-btn').addEventListener('click', () => {
