@@ -1,2 +1,0 @@
--- INSERT INTO point (lantitude,longitude)
--- VALUES ('test1', 'password1');

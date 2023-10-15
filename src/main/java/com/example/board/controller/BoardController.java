@@ -33,10 +33,7 @@ public class BoardController {
 
 		Optional<Board> data = boardRepository.findById(id);
 		if (data.isPresent()) {
-			
 			Board board = data.get();
-			
-	
 			// 현재 사용자의 이메일
 			String userEmail = (String) session.getAttribute("user_email");
 	
@@ -58,7 +55,7 @@ public String boardDelete(@PathVariable("id") long id) {
 		Optional<Board> data = boardRepository.findById(id);
 		Board board = data.orElse(null);
 		if (board == null) {
-			return "error-page"; // Handle the case where the board with the specified ID was not found
+			return "error-page"; 
 		} else {
 			model.addAttribute("board", board);
 			return "board/update";
@@ -79,10 +76,10 @@ public String boardDelete(@PathVariable("id") long id) {
 				boardRepository.save(originalBoard);
 				return "redirect:/board/list";
 			} else {
-				return "redirect:/board/update/{id}"; // Handle the case where email doesn't match
+				return "redirect:/board/update/{id}"; 
 			}
 		} else {
-			return "redirect:/board/update/{id}"; // Handle the case where the board with the specified ID was not found
+			return "redirect:/board/update/{id}";
 		}
 	}
 
