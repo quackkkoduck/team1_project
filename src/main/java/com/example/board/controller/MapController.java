@@ -5,30 +5,24 @@ import com.example.board.repository.PointRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @Controller
+@RequestMapping("/map") // 주소 매핑을 클래스 수준으로 변경
 public class MapController {
     @Autowired
     PointRepository pointRepository;
 
-    @GetMapping("/map")
-    public String map() {
-        return "map/map";
+    @GetMapping
+    public String map(Model model) {
+        // 데이터를 가져와서 모델에 추가
+        model.addAttribute("latitude", 37.4980239);
+        model.addAttribute("longitude", 127.027572);
+        
+        return "map/map"; // Thymeleaf 템플릿 이름
     }
-	@RequestMapping("/map")
-public String yourPage(Model model) {
-    // 데이터를 가져와서 모델에 추가
-    model.addAttribute("latitude", 37.4980239);
-    model.addAttribute("longitude", 127.027572);
-    
-    return "/map"; // Thymeleaf 템플릿 이름
-}
 
     private double distance(double lat1, double lon1, double lat2, double lon2) {
         double theta = lon1 - lon2;
@@ -50,7 +44,7 @@ public String yourPage(Model model) {
         return rad * 180 / Math.PI;
     }
 
-    @GetMapping("/map/getPoint")
+    @GetMapping("/getPoint")
     @ResponseBody
     public List<Point> getPoint(
             @RequestParam("lat") double lat,
